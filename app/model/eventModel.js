@@ -35,6 +35,21 @@ Event.getEventId = function(eventId, result){
     });
 };
 
+Event.getAllEvent = function (result) {
+    sql.query("Select * from event", function (err, res) {
+
+            if(err) {
+                console.log("error: ", err);
+                result(null, err);
+            }
+            else{
+              console.log('event : ', res);  
+
+             result(null, res);
+            }
+        });   
+};
+
 Event.updateById = function(eventId, event, result){
     sql.query("update event set event_title = ? where event_id = ?", [task.task, id], function(err, res){
         if(err){
