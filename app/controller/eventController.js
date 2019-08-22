@@ -2,7 +2,7 @@
 
 var Event = require('../model/eventModel.js');
 
-exports.list_all_events = function(req, res){
+exports.list_all_event = function(req, res){
     Event.getAllEvent(function(err, event){
         console.log('container');
         if(err)
