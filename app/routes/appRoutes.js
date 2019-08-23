@@ -11,4 +11,7 @@ module.exports = function(app){
     .get(todoList.read_a_event)
     .put(todoList.update_a_event)
     .delete(todoList.delete_a_event);
+
+    app.route('/test')
+    .get(todoList.getResult);
 };
