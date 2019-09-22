@@ -1,17 +1,20 @@
 'user strict';
 module.exports = function(app){
-    var todoList = require('../controller/eventController.js');
+    const todoEvent = require('../controller/eventController.js');
+    const todoUser  = require('../controller/userController.js');
 
-    //todoList Routes
+    //todoEvent Routes
     app.route('/event')
-    .get(todoList.list_all_event)
-    .post(todoList.create_a_event);
+    .get(todoEvent.list_all_event)
+    .post(todoEvent.create_a_event);
 
     app.route('/event/:eventId')
-    .get(todoList.read_a_event)
-    .put(todoList.update_a_event)
-    .delete(todoList.delete_a_event);
+    .get(todoEvent.read_a_event)
+    .put(todoEvent.update_a_event)
+    .delete(todoEvent.delete_a_event);
 
-    app.route('/test')
-    .get(todoList.getResult);
+    app.route('/api/user')
+    .get(todoUser.get_all_user)
+    .post(todoUser.create_user);
+
 };

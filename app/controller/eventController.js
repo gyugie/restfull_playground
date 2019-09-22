@@ -3,6 +3,28 @@
 var Event    = require('../model/eventModel.js');
 var response = require('./response.js');
 
+exports.create_a_event = function(req, res){
+    var new_event       = new Event(req.body);
+    var manipulation    = {
+        "event_title": new_event.event_title,
+        "event_slug": new_event.event_slug.replace(" ","-"),
+        "event_description": new_event.event_description,
+        "created_date": new_event.created_date
+    };
+
+    //handle null error
+    if(!new_event.event_title || !new_event.event_slug || !new_event.event_description){
+        res.status(400).send({error:true, message: 'Please provide title / slug / description'});
+
+    } else {
+        Event.createEvent(manipulation, function(err, event){
+            if (err)
+                res.send(err);
+                res.json({"response":event});
+            });
+    }
+};
+
 exports.list_all_event = function(req, res){
     Event.getAllEvent(function(err, event){
         console.log('container');
@@ -30,27 +52,7 @@ exports.read_a_event = function(req, res) {
     });
   };
 
-exports.create_a_event = function(req, res){
-    var new_event       = new Event(req.body);
-    var manipulation    = {
-        "event_title": new_event.event_title,
-        "event_slug": new_event.event_slug.replace(" ","-"),
-        "event_description": new_event.event_description,
-        "created_date": new_event.created_date
-    };
 
-    //handle null error
-    if(!new_event.event_title || !new_event.event_slug || !new_event.event_description){
-        res.status(400).send({error:true, message: 'Please provide title / slug / description'});
-
-    } else {
-        Event.createEvent(manipulation, function(err, event){
-            if (err)
-                res.send(err);
-                res.json({"response":event});
-            });
-    }
-};
 
 
 exports.update_a_event = function(req, res){
