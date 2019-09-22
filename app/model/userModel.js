@@ -34,4 +34,14 @@ User.getAllUser = function(result){
     });   
 }
 
+User.getUserByEmail = function(email, callback){
+    sql.query(`Select * from user where email = ?`, email, function(err, result){
+        if(err){
+            callback(null, err);
+        } else {
+            callback(null, result[0]);
+        }
+    });
+}
+
 module.exports = User;

@@ -17,4 +17,7 @@ module.exports = function(app){
     .get(todoUser.get_all_user)
     .post(todoUser.create_user);
 
+    app.route('/api/auth')
+    .post(todoUser.auth);
+
 };
