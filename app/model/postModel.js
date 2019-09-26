@@ -2,10 +2,10 @@
 var sql = require('./db.js');
 
 //Task object constructor
-var Event = function(event){
-    this.event_title        = event.event_title;
-    this.event_slug         = event.event_slug;
-    this.event_description  = event.event_description;
+var Post = function(post){
+    this.post_title        = post.post_title;
+    this.post_slug         = post.post_slug;
+    this.post_description  = post.post_description;
     this.created_date       = new Date();  
 };
 
@@ -13,9 +13,9 @@ var Event = function(event){
 
 
 // Todo insert 
-Event.createEvent = function (newEvent, result){
+Post.createPost = function (newPost, result){
     
-    sql.query("insert into event set ?", newEvent, function(err, res){
+    sql.query("insert into post set ?", newPost, function(err, res){
         if(err){
             console.log("error:", err);
             result(err, null);
@@ -26,8 +26,8 @@ Event.createEvent = function (newEvent, result){
     });
 };
 
-Event.getAllEvent = function (result) {
-    sql.query("Select * from event", function (err, res) {
+Post.getAllPost = function (result) {
+    sql.query("Select * from post", function (err, res) {
             if(err) {
                
                 result(null, err);
@@ -38,8 +38,8 @@ Event.getAllEvent = function (result) {
 };
 
 // Todo get data
-Event.getEventId = function (eventId, result) {
-     sql.query("Select * from event where event_id = ? ", eventId, function (err, res) {             
+Post.getPostId = function (postId, result) {
+     sql.query("Select * from post where post_id = ? ", postId, function (err, res) {             
         if(err) {
             result(null, err);
         } else {
@@ -48,8 +48,8 @@ Event.getEventId = function (eventId, result) {
     });   
 };
 
-Event.updateById = function(eventId, event, result){
-    sql.query("update event set ? where event_id = ?", [event, eventId], function(err, res){
+Post.updateById = function(postId, post, result){
+    sql.query("update post set ? where post_id = ?", [post, postId], function(err, res){
         if(err){
             console.log("error:", err);
             result(null, err);
@@ -59,8 +59,8 @@ Event.updateById = function(eventId, event, result){
     });
 };
 
-Event.remove = function(eventId, result){
-    sql.query("delete from event where event_id = ?", [eventId], function(err, res){
+Post.remove = function(postId, result){
+    sql.query("delete from post where post_id = ?", [postId], function(err, res){
         if(err){
             console.log("error:", err);
             result(null, err);
@@ -70,7 +70,7 @@ Event.remove = function(eventId, result){
     });
 };
 
-module.exports = Event;
+module.exports = Post;
 
 
 
