@@ -1,7 +1,8 @@
 'user strict';
 module.exports = function(app){
-    const todoPost = require('../controller/postController.js');
+    const todoPost  = require('../controller/postController.js');
     const todoUser  = require('../controller/userController.js');
+    const todoProcessing = require('../controller/someProcesscing.js');
 
     //todoEvent Routes
     app.route('/post')
@@ -19,5 +20,8 @@ module.exports = function(app){
 
     app.route('/api/auth')
     .post(todoUser.auth);
+
+    app.route('/api/process')
+    .get(todoProcessing.start);
 
 };

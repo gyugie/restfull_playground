@@ -9,6 +9,7 @@ exports.create_a_post = function(req, res){
         "post_title": new_post.post_title,
         "post_slug": new_post.post_slug.replace(" ","-"),
         "post_description": new_post.post_description,
+        "is_favorite": new_post.post_is_favorite,
         "created_date": new_post.created_date
     };
 
