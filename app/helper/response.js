@@ -19,3 +19,14 @@ exports.null = function(message, res) {
     res.end();
   };
 
+exports.inValid = function(errorCode, message, res){
+  var data = {
+    'status': errorCode,
+    'messages': message
+  }
+
+  res.json(data);
+  res.end();
+}
+
+

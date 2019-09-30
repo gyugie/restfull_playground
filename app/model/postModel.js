@@ -3,10 +3,10 @@ var sql = require('./db.js');
 
 //Task object constructor
 var Post = function(post){
-    this.post_title        = post.post_title;
-    this.post_slug         = post.post_slug;
-    this.post_description  = post.post_description;
-    this.post_is_favorite  = post.post_is_favorite;
+    this.post_title         = post.post_title;
+    this.post_slug          = post.post_slug;
+    this.post_description   = post.post_description;
+    this.is_favorite        = post.is_favorite;
     this.created_date       = new Date();  
 };
 

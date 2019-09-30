@@ -1,7 +1,10 @@
 'use strict';
 const bcrypt    = require('bcryptjs');
+var jwt         = require('jsonwebtoken');
 const User      = require('../model/userModel.js');
-const response  = require('./response.js');
+const response  = require('../helper/response');
+const config    = require('../config/config.js');
+
 
 exports.auth = function(req, res){
     var email       = req.body.email;
@@ -18,7 +21,16 @@ exports.auth = function(req, res){
             } else if (!isMatch) {
                 response.null('password is wrong!', res);
             } else {
-                response.ok("success",callback, res);
+                var Token = jwt.sign({ password: callback.password}, config.secret, {
+                    expiresIn: 86400
+                });
+
+                var results = {
+                    authentication: true,
+                    token: Token
+                }
+
+                response.ok("success", results, res);
             }
           });
         

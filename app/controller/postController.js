@@ -1,7 +1,7 @@
 'use strict';
 
 var Post    = require('../model/postModel.js');
-var response = require('./response.js');
+var response = require('../helper/response.js');
 
 exports.create_a_post = function(req, res){
     var new_post       = new post(req.body);
@@ -9,7 +9,7 @@ exports.create_a_post = function(req, res){
         "post_title": new_post.post_title,
         "post_slug": new_post.post_slug.replace(" ","-"),
         "post_description": new_post.post_description,
-        "is_favorite": new_post.post_is_favorite,
+        "is_favorite": new_post.is_favorite,
         "created_date": new_post.created_date
     };
 
@@ -41,7 +41,7 @@ exports.list_all_post = function(req, res){
 };
 
 exports.read_a_post = function(req, res) {
-    Post.getpostId(req.params.postId, function(err, post) {
+    Post.getPostId(req.params.postId, function(err, post) {
       if (err)
         res.send(err);
 
@@ -55,18 +55,21 @@ exports.read_a_post = function(req, res) {
   };
 
 exports.update_a_post = function(req, res){
-    var new_post       = new post(req.body);
-    var manipulation    = {
+    var new_post       = new Post(req.body);
+    var payload    = {
         "post_title": new_post.post_title,
-        "post_slug": new_post.post_slug.replace(" ","-"),
+        "post_slug": new_post.post_title.replace(" ","-"),
         "post_description": new_post.post_description,
+        "is_favorite": new_post.is_favorite,
         "created_date": new_post.created_date
     };
+    Post.updateById(req.params.postId, payload, function(err, post){
+        if(err){
+            response.inValid(500, `Error ${err}`, res);
+        }
 
-    Post.updateById(req.params.postId, manipulation, function(err, post){
-        if(err)
-        res.send(err);
-        res.json(post);
+        response.ok(`${new_post.post_title} Updated success`, true, res);
+        
     });
 };
 
