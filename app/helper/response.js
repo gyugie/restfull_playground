@@ -4,7 +4,7 @@ exports.ok = function(message, values, res) {
   var data = {
       'status': 200,
       'message': message,
-      'data': values
+      'results': values
   };
   res.json(data);
   res.end();

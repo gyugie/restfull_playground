@@ -27,16 +27,16 @@ exports.create_a_post = function(req, res){
 };
 
 exports.list_all_post = function(req, res){
-    Post.getAllPost(function(err, post){
+    let bodyRequest        = {
+        'page'          : req.body.page,
+        'start_date'    : req.body.start_date,
+        'end_date'      : req.body.end_date,
+    };
+
+    Post.getAllPost(bodyRequest, function(err, results){
         if(err)
             res.send(err);
-            if(post.length > 0){
-                setTimeout(() => {
-                    response.ok("success",post, res);
-                }, 1000);
-            } else {
-                response.null("Data Not Found!", res);
-            }
+            response.ok('success', results, res);
     });
 };
 

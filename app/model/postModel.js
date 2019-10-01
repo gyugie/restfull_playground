@@ -10,6 +10,7 @@ var Post = function(post){
     this.created_date       = new Date();  
 };
 
+let perPage = 5;
 
 
 
@@ -27,15 +28,41 @@ Post.createPost = function (newPost, result){
     });
 };
 
-Post.getAllPost = function (result) {
-    sql.query("Select * from post", function (err, res) {
-            if(err) {
-               
-                result(null, err);
-            } else {
-             result(null, res);
-            }
-        });   
+Post.getAllPost = function (params, result) {
+    const page        = (params.page == undefined) ? 0 : params.page - 1;
+    const startDate   = params.start_date;
+    const endDate     = params.end_date;
+    const start       = Math.ceil(page * perPage);
+    var count;
+    var data;
+
+        // execute query 
+        sql.execute('select count(*) as total from post')
+            .then(rows => {
+                count = JSON.parse(JSON.stringify(rows[0].total));
+                
+                if( startDate != undefined && endDate != undefined ){
+                    query = `select * from post where created_date >= '${startDate}' AND created_date <= '${endDate}' LIMIT ${perPage} OFFSET ${start}`;
+                } else {
+                    query = `select * from post LIMIT ${perPage} OFFSET ${start}`;
+                }
+                return sql.execute( query );
+            })
+            .then(rows => {
+                 data = JSON.parse(JSON.stringify(rows));
+            })
+            .then( () => {
+                var response = {
+                    'total_rows': count,
+                    'total_page': Math.ceil(count / perPage),
+                    'page'      : parseInt(page) + 1,
+                    'row_from'  : start + 1,
+                    'row_end'   : data.length + start,
+                    'data'      : data
+                }
+                
+                result(null, response);
+            });
 };
 
 // Todo get data
