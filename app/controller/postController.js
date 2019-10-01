@@ -4,24 +4,18 @@ var Post    = require('../model/postModel.js');
 var response = require('../helper/response.js');
 
 exports.create_a_post = function(req, res){
-    var new_post       = new post(req.body);
-    var manipulation    = {
-        "post_title": new_post.post_title,
-        "post_slug": new_post.post_slug.replace(" ","-"),
-        "post_description": new_post.post_description,
-        "is_favorite": new_post.is_favorite,
-        "created_date": new_post.created_date
-    };
-
+    var new_post       = new Post(req.body);
+  
     //handle null error
-    if(!new_post.post_title || !new_post.post_slug || !new_post.post_description){
-        res.status(400).send({error:true, message: 'Please provide title / slug / description'});
+    if(!new_post.post_title || !new_post.image_url || !new_post.post_description){
 
+        res.status(400).send({error:true, message: 'Please provide title / image_url / description'});
     } else {
-        Post.createPost(manipulation, function(err, post){
+        
+        Post.createPost(new_post, function(err, result){
             if (err)
                 res.send(err);
-                res.json({"response":post});
+                response.ok('success', result, res);
             });
     }
 };

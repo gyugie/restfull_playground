@@ -4,8 +4,9 @@ var sql = require('./db.js');
 //Task object constructor
 var Post = function(post){
     this.post_title         = post.post_title;
-    this.post_slug          = post.post_slug;
+    this.post_slug          = post.post_title.replace(" ","-");
     this.post_description   = post.post_description;
+    this.image_url          = post.image_url;
     this.is_favorite        = post.is_favorite;
     this.created_date       = new Date();  
 };
@@ -15,17 +16,26 @@ let perPage = 5;
 
 
 // Todo insert 
-Post.createPost = function (newPost, result){
-    
-    sql.query("insert into post set ?", newPost, function(err, res){
-        if(err){
-            console.log("error:", err);
-            result(err, null);
-        } else {
-            console.log(res.insertId);  
-            result(null, res.insertId);
-        }
-    });
+Post.createPost = function (post, result){
+
+    var query = `Insert INTO post (
+            post_title, post_slug, 
+            post_description, image_url, 
+            is_favorite, created_date
+        ) VALUES ( 
+            '${post.post_title}', '${post.post_slug}',
+            '${post.post_description}', '${post.is_favorite}',
+            '${post.created_date}', '${post.created_by}'
+        )`;
+
+        sql.execute( query )
+        .then( rows => {
+            result(null, rows.insertId);
+        })
+        .catch( err => {
+            console.log('error insert post', err);
+            result(null, err);
+        })
 };
 
 Post.getAllPost = function (params, result) {
