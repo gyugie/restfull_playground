@@ -4,7 +4,6 @@ var sql = require('./db.js');
 
 //Task object contructor 
 const User = function(user){
-    // this.id         = user.id;
     this.username   = user.username;
     this.email      = user.email;
     this.password   = user.password;
@@ -34,8 +33,8 @@ User.getAllUser = function(result){
     });   
 }
 
-User.getUserByEmail = function(email, callback){
-    sql.query(`Select * from user where email = ?`, email, function(err, result){
+User.getUserByEmailOrUsername = function(params, callback){
+    sql.query(`Select * from user where email = ? OR username = ?`, [params, params] , function(err, result){
         if(err){
             callback(null, err);
         } else {
@@ -43,5 +42,7 @@ User.getUserByEmail = function(email, callback){
         }
     });
 }
+
+
 
 module.exports = User;

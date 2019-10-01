@@ -10,9 +10,9 @@ exports.auth = function(req, res){
     var email       = req.body.email;
     var password    = req.body.password;
 
-    User.getUserByEmail(email, function(err, callback){
+    User.getUserByEmailOrUsername(email, function(err, callback){
         if(err){
-            response.null('email is not found!', res);
+            response.null('email or username is not found!', res);
         }       
       
         bcrypt.compare(password, callback.password, function(err, isMatch) {
@@ -32,8 +32,8 @@ exports.auth = function(req, res){
 
                 response.ok("success", results, res);
             }
-          });
-        
+
+        });
     });
 }
 
@@ -46,27 +46,37 @@ exports.create_user = function(req, res){
     if(!newUser.username || !newUser.email || !newUser.password){
         res.status(400).send({error:true, message: 'Please provide username / email / password'});
     } else {
-       
-        bcrypt.hash(password, BCRYPT_SALT_ROUNDS)
-        .then(function(hashedPassword) {
-            var userObject  = {
-                "username"  : newUser.username,
-                "email"     : newUser.email,
-                "password"  : hashedPassword,
-                "created_date": newUser.created_date,
-            };
-           
-                User.createUser(userObject, function(err, user){
-                    if(err)
-                    res.send(err);
-                    response.ok("success",user, res);
+
+        User.getUserByEmailOrUsername(newUser.email, function(err, callback){
+            if(err) return err;
+
+            if(callback){
+
+                response.inValid(400, "Username or Email Already Axist, please enter another email or username!", res);
+            } else {
+
+                 bcrypt.hash(password, BCRYPT_SALT_ROUNDS)
+                .then(function(hashedPassword) {
+                    var userObject  = {
+                        "username"  : newUser.username,
+                        "email"     : newUser.email,
+                        "password"  : hashedPassword,
+                        "created_date": newUser.created_date,
+                    };
+                
+                    User.createUser(userObject, function(err, user){
+                        if(err)
+                        res.send(err);
+                        response.ok(`new user ${newUser.username} success added`, true, res);
+                    });
+                })
+                .catch(function(error){
+                    console.log(error);
+                    next();
                 });
-        })
-        .catch(function(error){
-            console.log(error);
-            next();
+                
+            }
         });
-       
     }
 };
 
@@ -81,3 +91,5 @@ exports.get_all_user = function(req, res){
             }
     });
 };
+
+
